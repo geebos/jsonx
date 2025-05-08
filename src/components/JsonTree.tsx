@@ -192,7 +192,6 @@ const JsonTree: React.FC<JsonTreeProps> = ({ data }) => {
         <JsonDetail
           node={selectedNode}
           onClose={() => setSelectedNode(undefined)}
-          onCopyValue={handleCopyValue}
           onCopyPath={handleCopyPath}
         />
       )}

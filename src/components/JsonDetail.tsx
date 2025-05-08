@@ -4,14 +4,12 @@ import { JsonNode } from '../types/json-tree';
 interface JsonDetailProps {
   node: JsonNode;
   onClose: () => void;
-  onCopyValue: (value: any) => void;
   onCopyPath: (path: string) => void;
 }
 
 const JsonDetail: React.FC<JsonDetailProps> = ({
   node,
   onClose,
-  onCopyValue,
   onCopyPath
 }) => {
   const [value, setValue] = useState<string>('');
