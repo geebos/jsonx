@@ -300,6 +300,10 @@
     flex-direction: column;
     overflow: hidden;
     background: #fafafa;
+    min-width: 300px;
+    min-height: 200px;
+    max-width: 80vw;
+    max-height: 80vh;
 }
 
 .json-detail-header {
@@ -373,4 +377,26 @@
 .json-detail-value:focus {
     background: #fff;
     box-shadow: inset 0 0 0 1px #1890ff;
+}
+
+.json-detail-resize-handle {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 20px;
+    height: 20px;
+    cursor: sw-resize;
+    z-index: 1;
+}
+
+.json-detail-resize-handle::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    bottom: 4px;
+    width: 8px;
+    height: 8px;
+    border-left: 2px solid #ccc;
+    border-bottom: 2px solid #ccc;
+    transform: rotate(0deg);
 }
