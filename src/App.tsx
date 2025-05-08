@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 import JsonTree from './components/JsonTree';
-import { JsonNode } from './types/json-tree';
 import './styles/json-tree.css';
 import './styles/app.css';
 
@@ -26,31 +25,12 @@ const sampleData = {
 };
 
 const App: React.FC = () => {
-  const [selectedNode, setSelectedNode] = useState<JsonNode | null>(null);
-
-  const handleNodeClick = (node: JsonNode) => {
-    setSelectedNode(node);
-  };
-
   return (
     <div className="app">
       <div className="app-content">
         <div className="json-tree-container">
-          <JsonTree data={sampleData} onNodeClick={handleNodeClick} />
+          <JsonTree data={sampleData} />
         </div>
-        {selectedNode && (
-          <div className="json-detail-container">
-            <div className="json-detail-header">
-              <h2>节点详情</h2>
-            </div>
-            <div className="json-detail-content">
-              <div className="json-path">路径: {selectedNode.path}</div>
-              <div className="json-value">
-                <pre>{JSON.stringify(selectedNode.value, null, 2)}</pre>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

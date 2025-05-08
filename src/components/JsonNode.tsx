@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { JsonNodeProps } from '../types/json-tree';
 import JsonValue from './JsonValue';
-import JsonContextMenu from './JsonContextMenu';
 
-const JsonNode: React.FC<JsonNodeProps> = ({ 
-  node, 
-  onNodeClick, 
+const JsonNode: React.FC<JsonNodeProps> = ({
+  node,
+  onNodeClick,
   expandedNodes,
   onToggleNode,
   onCopyValue,
@@ -14,7 +13,6 @@ const JsonNode: React.FC<JsonNodeProps> = ({
   onCollapseAll,
   selectedNode
 }) => {
-  const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null);
   const isExpanded = expandedNodes?.has(node.path) ?? true;
   const isSelected = selectedNode?.path === node.path;
 
@@ -34,19 +32,10 @@ const JsonNode: React.FC<JsonNodeProps> = ({
     }
   };
 
-  const handleContextMenu = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setContextMenu({ x: e.clientX, y: e.clientY });
-  };
-
-  const handleCloseContextMenu = () => {
-    setContextMenu(null);
-  };
-
   const renderExpandIcon = () => {
     if (node.type === 'object' || node.type === 'array') {
       return (
-        <span 
+        <span
           className="json-node-expand-icon"
           onClick={handleToggle}
           title={isExpanded ? "折叠" : "展开"}
@@ -60,7 +49,7 @@ const JsonNode: React.FC<JsonNodeProps> = ({
 
   const renderChildren = () => {
     if (!isExpanded || !node.children) return null;
-    
+
     return (
       <div className="json-node-children">
         {node.children.map((child, index) => (
@@ -82,32 +71,19 @@ const JsonNode: React.FC<JsonNodeProps> = ({
   };
 
   return (
-    <div 
+    <div
       className={`json-node ${isSelected ? 'json-node-selected' : ''}`}
-      onContextMenu={handleContextMenu}
     >
-      <div 
-        className="json-node-content" 
+      <div
+        className="json-node-content"
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
       >
         {renderExpandIcon()}
         {node.key && <span className="json-node-key">{node.key}:</span>}
-        <JsonValue value={node.value} type={node.type} count={node.children?.length}/>
+        <JsonValue value={node.value} type={node.type} count={node.children?.length} />
       </div>
       {renderChildren()}
-      {contextMenu && (
-        <JsonContextMenu
-          node={node}
-          x={contextMenu.x}
-          y={contextMenu.y}
-          onClose={handleCloseContextMenu}
-          onCopyValue={onCopyValue}
-          onCopyPath={onCopyPath}
-          onExpandAll={onExpandAll}
-          onCollapseAll={onCollapseAll}
-        />
-      )}
     </div>
   );
 };
