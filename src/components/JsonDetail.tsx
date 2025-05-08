@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { JsonNode } from '../types/json-tree';
+import { compressJson, escapeString, unescapeString } from '../core/json';
 
 interface JsonDetailProps {
   node: JsonNode;
   onClose: () => void;
   onCopyPath: (path: string) => void;
+  onUpdateValue: (path: string, value: any) => void;
 }
 
 const DEFAULT_SIZE = { width: 550, height: 600 };
@@ -13,7 +15,8 @@ const STORAGE_KEY = 'json-detail-size';
 const JsonDetail: React.FC<JsonDetailProps> = ({
   node,
   onClose,
-  onCopyPath
+  onCopyPath,
+  onUpdateValue
 }) => {
   const [value, setValue] = useState<string>('');
   const [size, setSize] = useState(() => {
@@ -74,6 +77,40 @@ const JsonDetail: React.FC<JsonDetailProps> = ({
     document.removeEventListener('mouseup', handleMouseUp);
   };
 
+  const handleCompress = () => {
+    setValue(compressJson(value));
+  };
+
+  const handleCompressEscape = () => {
+    try {
+      // 先压缩 JSON，然后转义
+      const compressed = compressJson(value);
+      setValue(escapeString(compressed));
+    } catch (e) {
+      console.error('Compress and escape failed:', e);
+    }
+  };
+
+  const handleUnescape = () => {
+    setValue(unescapeString(value));
+  };
+
+  const handleUpdate = () => {
+    try {
+      // 尝试解析输入的值
+      const parsedValue = JSON.parse(value);
+      // 调用更新函数
+      onUpdateValue(node.path, parsedValue);
+      // 关闭详情面板
+      onClose();
+    } catch (e) {
+      console.error('Update failed:', e);
+      // 如果解析失败，可能是普通字符串，直接更新
+      onUpdateValue(node.path, value);
+      onClose();
+    }
+  };
+
   return (
     <div 
       className="json-detail"
@@ -85,6 +122,20 @@ const JsonDetail: React.FC<JsonDetailProps> = ({
           {node.path}
         </div>
         <button className="json-detail-close" onClick={onClose}>×</button>
+      </div>
+      <div className="json-detail-toolbar">
+        <button className="json-detail-toolbar-btn" title="压缩转义" onClick={handleCompressEscape}>
+          压缩转义
+        </button>
+        <button className="json-detail-toolbar-btn" title="压缩" onClick={handleCompress}>
+          压缩
+        </button>
+        <button className="json-detail-toolbar-btn" title="去除转义" onClick={handleUnescape}>
+          去除转义
+        </button>
+        <button className="json-detail-toolbar-btn" title="修改" onClick={handleUpdate}>
+          修改
+        </button>
       </div>
       <div className="json-detail-content">
         <textarea

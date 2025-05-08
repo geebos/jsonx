@@ -400,3 +400,38 @@
     border-bottom: 2px solid #ccc;
     transform: rotate(0deg);
 }
+
+.json-detail-toolbar {
+    padding: 8px 16px;
+    border-bottom: 1px solid #e8e8e8;
+    display: flex;
+    gap: 8px;
+    background: #fafafa;
+}
+
+.json-detail-toolbar-btn {
+    padding: 4px 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #fff;
+    color: #333;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s;
+}
+
+.json-detail-toolbar-btn:hover {
+    background: #f0f0f0;
+    border-color: #ccc;
+}
+
+.json-detail-toolbar-btn:active {
+    background: #f5f5f5;
+    border-color: #ddd;
+    color: #666;
+}
+
+.json-detail-toolbar-icon {
+    font-size: 14px;
+    line-height: 1;
+}

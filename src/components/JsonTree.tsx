@@ -3,9 +3,11 @@ import { JsonNode } from '../types/json-tree';
 import JsonNodeComponent from './JsonNode';
 import JsonDetail from './JsonDetail';
 import Toast from './Toast';
+import { updateJsonValue } from '../core/json';
 
 interface JsonTreeProps {
   data: any;
+  onDataChange?: (newData: any) => void;
 }
 
 interface ToastMessage {
@@ -13,7 +15,8 @@ interface ToastMessage {
   message: string;
 }
 
-const JsonTree: React.FC<JsonTreeProps> = ({ data }) => {
+const JsonTree: React.FC<JsonTreeProps> = ({ data: initialData, onDataChange }) => {
+  const [data, setData] = useState(initialData);
   const buildTree = (value: any, path: string = '$', key: string = ''): JsonNode => {
     let type: JsonNode['type'];
     if (value === null) {
@@ -118,6 +121,12 @@ const JsonTree: React.FC<JsonTreeProps> = ({ data }) => {
     }
   };
 
+  const handleUpdateValue = (path: string, value: any) => {
+    const newData = updateJsonValue(data, path, value);
+    setData(newData);
+    onDataChange?.(newData);
+  };
+
   const handleExpandNode = (node: JsonNode) => {
     const newExpandedNodes = new Set(expandedNodes);
     const traverse = (n: JsonNode) => {
@@ -193,6 +202,7 @@ const JsonTree: React.FC<JsonTreeProps> = ({ data }) => {
           node={selectedNode}
           onClose={() => setSelectedNode(undefined)}
           onCopyPath={handleCopyPath}
+          onUpdateValue={handleUpdateValue}
         />
       )}
       {toasts.map(toast => (
