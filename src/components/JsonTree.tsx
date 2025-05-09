@@ -44,11 +44,11 @@ const JsonTree: React.FC<JsonTreeProps> = ({ data: initialData, onDataChange }) 
     };
 
     if (type === 'object') {
-      node.children = Object.entries(value).map(([k, v]) => 
+      node.children = Object.entries(value).map(([k, v]) =>
         buildTree(v, `${path}.${k}`, k)
       );
     } else if (type === 'array') {
-      node.children = value.map((v: any, i: number) => 
+      node.children = value.map((v: any, i: number) =>
         buildTree(v, `${path}[${i}]`, i.toString())
       );
     }
@@ -100,7 +100,7 @@ const JsonTree: React.FC<JsonTreeProps> = ({ data: initialData, onDataChange }) 
 
   const handleCopyValue = async (value: any) => {
     try {
-      const text = typeof value === 'object' 
+      const text = typeof value === 'object'
         ? JSON.stringify(value, null, 2)
         : String(value);
       await navigator.clipboard.writeText(text);
@@ -153,15 +153,19 @@ const JsonTree: React.FC<JsonTreeProps> = ({ data: initialData, onDataChange }) 
 
   useEffect(() => {
     const handleKeyDown = async (e: KeyboardEvent) => {
+      if (!selectedNode) {
+        return;
+      }
       if (e.key.toLowerCase() === 'c' && (e.metaKey || e.ctrlKey)) {
-        if (selectedNode) {
+        if (e.shiftKey) {
+          await handleCopyPath(selectedNode.path);
+          return;
+        }
+        if (document.activeElement === document.body) {
           e.preventDefault();
-          
-          if (e.shiftKey) {
-            await handleCopyPath(selectedNode.path);
-          } else {
-            await handleCopyValue(selectedNode.value);
-          }
+          await handleCopyValue(selectedNode.value);
+        } else {
+          showToast('复制成功');
         }
       }
     };

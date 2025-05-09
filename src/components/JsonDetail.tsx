@@ -24,6 +24,7 @@ const JsonDetail: React.FC<JsonDetailProps> = ({
     return savedSize ? JSON.parse(savedSize) : DEFAULT_SIZE;
   });
   const detailRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const isResizing = useRef(false);
   const startPos = useRef({ x: 0, y: 0 });
   const startSize = useRef({ width: 0, height: 0 });
@@ -35,6 +36,13 @@ const JsonDetail: React.FC<JsonDetailProps> = ({
         : String(node.value)
     );
   }, [node.value]);
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.select();
+      textareaRef.current.focus();
+    }
+  }, [value]);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(size));
@@ -83,7 +91,6 @@ const JsonDetail: React.FC<JsonDetailProps> = ({
 
   const handleCompressEscape = () => {
     try {
-      // 先压缩 JSON，然后转义
       const compressed = compressJson(value);
       setValue(escapeString(compressed));
     } catch (e) {
@@ -97,15 +104,11 @@ const JsonDetail: React.FC<JsonDetailProps> = ({
 
   const handleUpdate = () => {
     try {
-      // 尝试解析输入的值
       const parsedValue = JSON.parse(value);
-      // 调用更新函数
       onUpdateValue(node.path, parsedValue);
-      // 关闭详情面板
       onClose();
     } catch (e) {
       console.error('Update failed:', e);
-      // 如果解析失败，可能是普通字符串，直接更新
       onUpdateValue(node.path, value);
       onClose();
     }
@@ -139,9 +142,11 @@ const JsonDetail: React.FC<JsonDetailProps> = ({
       </div>
       <div className="json-detail-content">
         <textarea
+          ref={textareaRef}
           className="json-detail-value"
           value={value}
           onChange={handleValueChange}
+          onFocus={(e) => e.target.select()}
           spellCheck={false}
         />
       </div>
