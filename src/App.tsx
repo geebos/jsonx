@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import JsonTree from './components/JsonTree';
 import './styles/json-tree.css';
 import './styles/app.css';
+import { Analytics } from "@vercel/analytics/next";
 
 function App() {
   const [jsonData, setJsonData] = useState<any>(null);
@@ -63,6 +64,8 @@ function App() {
       ) : <JsonTree data={jsonData} />}
 
       {error && <div className="error-message">{error}</div>}
+
+      <Analytics />
     </>
   );
 }
