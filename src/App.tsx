@@ -21,7 +21,8 @@ function App() {
     settings: {
       enabled: true,
       maxItems: 100
-    }
+    },
+    escaped: "{\"name\":\"示例数据\",\"version\":\"1.0.0\",\"items\":[{\"id\":1,\"value\":\"项目 1\"},{\"id\":2,\"value\":\"项目 2\"}],\"settings\":{\"enabled\":true,\"maxItems\":100}}"
   };
 
   // 组件挂载时设置焦点并全选内容
