@@ -44,11 +44,6 @@ function App() {
     }
   };
 
-  const handleBack = () => {
-    setShowInput(true);
-    setJsonData(null);
-  };
-
   return (
     <>
       {showInput ? (
