@@ -239,6 +239,7 @@
 .json-node-selected>.json-node-content {
     background-color: #e6f7ff;
     border-color: #91d5ff;
+    font-weight: bold;
 }
 
 .json-node-selected>.json-node-content:hover {
