@@ -19,9 +19,8 @@ export default defineConfig({
     },
   },
   build: {
-    // 减少构建时的重新加载
-    watch: {
-      buildDelay: 1000,
-    },
+    // 构建配置
+    outDir: 'dist',
+    emptyOutDir: true,
   },
 })
