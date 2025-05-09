@@ -1,54 +1,49 @@
-# React + TypeScript + Vite
+# JSONX
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+JSONX 是一个强大的 JSON 可视化工具，提供直观的树形结构展示和便捷的编辑功能。
 
-Currently, two official plugins are available:
+## 主要功能
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 1. JSON 可视化
+- 树形结构展示 JSON 数据
+- 支持展开/折叠节点
+- 显示数据类型和值
 
-## Expanding the ESLint configuration
+### 2. 编辑功能
+- 支持添加、编辑、删除节点
+- 支持复制节点值
+- 支持路径导航
+- 支持 JSON 格式化
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 3. 数据操作
+- 支持压缩/解压缩 JSON
+- 支持转义/反转义
+- 支持路径更新
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## 快捷键
+
+### 编辑
+- `Ctrl + C`: 复制节点值
+- `Ctrl + V`: 粘贴值
+
+
+## 开发
+
+```bash
+# 安装依赖
+npm install
+
+# 开发模式
+npm run dev
+
+# 构建
+npm run build
+
+# 预览
+npm run preview
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+## 技术栈
+- React 19
+- TypeScript
+- Vite
