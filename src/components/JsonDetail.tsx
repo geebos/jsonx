@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { JsonNode } from '../types/json-tree';
 import { compressJson, escapeString, unescapeString } from '../core/json';
+import { flushSync } from 'react-dom';
 
 interface JsonDetailProps {
   node: JsonNode;
@@ -19,6 +20,7 @@ const JsonDetail: React.FC<JsonDetailProps> = ({
   onUpdateValue
 }) => {
   const [value, setValue] = useState<string>('');
+  const [isInitial, setIsInitial] = useState(false);
   const [size, setSize] = useState(() => {
     const savedSize = localStorage.getItem(STORAGE_KEY);
     return savedSize ? JSON.parse(savedSize) : DEFAULT_SIZE;
@@ -30,19 +32,24 @@ const JsonDetail: React.FC<JsonDetailProps> = ({
   const startSize = useRef({ width: 0, height: 0 });
 
   useEffect(() => {
-    setValue(
-      typeof node.value === 'object' 
-        ? JSON.stringify(node.value, null, 2)
-        : String(node.value)
-    );
+    let value = typeof node.value === 'object' ? JSON.stringify(node.value, null, 2) : String(node.value);
+    setValue(value);
+    setIsInitial(true);
   }, [node.value]);
 
   useEffect(() => {
+    if (isInitial) {
+      focusAndSelect();
+      setIsInitial(false);
+    }
+  }, [value]);  
+
+  const focusAndSelect = () => {
     if (textareaRef.current) {
       textareaRef.current.select();
       textareaRef.current.focus();
     }
-  }, [value]);
+  }
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(size));
@@ -58,11 +65,11 @@ const JsonDetail: React.FC<JsonDetailProps> = ({
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!detailRef.current) return;
-    
+
     isResizing.current = true;
     startPos.current = { x: e.clientX, y: e.clientY };
     startSize.current = { width: size.width, height: size.height };
-    
+
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
   };
@@ -72,10 +79,10 @@ const JsonDetail: React.FC<JsonDetailProps> = ({
 
     const deltaX = startPos.current.x - e.clientX;
     const deltaY = e.clientY - startPos.current.y;
-    
+
     const newWidth = Math.max(300, Math.min(800, startSize.current.width + deltaX));
     const newHeight = Math.max(200, Math.min(800, startSize.current.height + deltaY));
-    
+
     setSize({ width: newWidth, height: newHeight });
   };
 
@@ -86,20 +93,24 @@ const JsonDetail: React.FC<JsonDetailProps> = ({
   };
 
   const handleCompress = () => {
-    setValue(compressJson(value));
+    flushSync(() => {
+      setValue(compressJson(value));
+    });
+    focusAndSelect();
   };
 
   const handleCompressEscape = () => {
-    try {
-      const compressed = compressJson(value);
-      setValue(escapeString(compressed));
-    } catch (e) {
-      console.error('Compress and escape failed:', e);
-    }
+    flushSync(() => {
+      setValue(escapeString(compressJson(value)));
+    });
+    focusAndSelect();
   };
 
   const handleUnescape = () => {
-    setValue(unescapeString(value));
+    flushSync(() => {
+      setValue(unescapeString(value));
+    });
+    focusAndSelect();
   };
 
   const handleUpdate = () => {
@@ -115,7 +126,7 @@ const JsonDetail: React.FC<JsonDetailProps> = ({
   };
 
   return (
-    <div 
+    <div
       className="json-detail"
       ref={detailRef}
       style={{ width: size.width, height: size.height }}
